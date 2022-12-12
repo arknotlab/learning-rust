@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 // Functions
 fn add(x: f64, y: f64) -> f64 {
     x + y
@@ -124,8 +126,51 @@ fn main() {
 
     let mut person_one: Person<&str> = Person { property: "Axel" };
     person_one.property = "Zoe";
-
     println!("{:?}", person_one);
 
+    // Wrap Person to implement Display Trait
+    struct PersonPrinter<T> {
+        person: Person<T>,
+    }
 
+    impl<T> std::fmt::Display for PersonPrinter<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            writeln!(f, "properties")?;
+            write!(f, "Done")
+        }
+    }
+
+    // Traits (known as interfaces or typeclasses in other languages) //
+
+    trait Greeter<T> {
+        fn greet(self) -> Option<T>;
+    }
+
+    impl<T> Greeter<T> for PersonPrinter<T> {
+        fn greet(self) -> Option<T> {
+            Some(self.person.property)
+        }
+    }
+
+    let z: PersonPrinter<&str> = PersonPrinter {
+        person: { Person { property: "Axel" } },
+    };
+
+    println!("{:?}", z.greet());
+
+    // Function pointer types //
+
+    fn fibonacci(n: u32) -> u32 {
+        match n {
+            0 => 1,
+            1 => 1,
+            _ => fibonacci(n - 1) + fibonacci(n - 2),
+        }
+    }
+
+    type FunctionPointer = fn(u32) -> u32;
+
+    let fib: FunctionPointer = fibonacci;
+
+    println!("Fib: {}", fib(4));
 }
