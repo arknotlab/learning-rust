@@ -173,4 +173,103 @@ fn main() {
     let fib: FunctionPointer = fibonacci;
 
     println!("Fib: {}", fib(4));
+
+    // Pattern Matching //
+    let optional_i32 = OptionalI32::AnI32(4);
+
+    match optional_i32 {
+        OptionalI32::AnI32(n) => println!("It's an i32 {}", n),
+        OptionalI32::Nothing => println!("It's nothing!"),
+    }
+
+    // Advanced pattern matching //
+    struct Coordinates {
+        x: i32,
+        y: OptionalI32,
+    }
+
+    let mexico_city_coordinates: Coordinates = Coordinates {
+        x: 15,
+        y: OptionalI32::AnI32(32),
+    };
+
+    match mexico_city_coordinates {
+        Coordinates {
+            x: 0,
+            y: OptionalI32::AnI32(0),
+        } => println!("The numbers are zero!"),
+        Coordinates {
+            x: n,
+            y: OptionalI32::AnI32(m),
+        } if n == m => println!("Numbers are the same"),
+        Coordinates {
+            x: n,
+            y: OptionalI32::AnI32(m),
+        } => println!("Different numbers {} {}", n, m),
+        Coordinates {
+            x: _,
+            y: OptionalI32::Nothing,
+        } => println!("The second number is Nothing!"),
+    }
+
+    // Control flow //
+
+    // `for` loops/iteration
+    let array = [1, 2, 3];
+    for i in array {
+        println!("{}", i);
+    }
+
+    // Ranges
+    for i in 0u32..10 {
+        println!("{}", i);
+    }
+
+    if 1 == 1 {
+        println!("Math is working");
+    } else {
+        println!("Oh no");
+    }
+
+    while 2 == 2 {
+        println!("Counting once");
+        break;
+    }
+
+    let mut counter: i32 = 0;
+
+    // Infinite loop
+    loop {
+        println!("Hello!");
+        if counter == 4 {
+            break;
+        }
+        counter += 1;
+    }
+
+    // Memory safety and pointers //
+    let mut mine: Box<i32> = Box::new(3);
+    *mine = 5; // dereference
+
+    println!("Mine box: {}", mine);
+    let mut now_its_mine = mine; // now_its_mine takes ownership of mine, in other words, mine is moved
+    *now_its_mine += 10;
+    println!("Mine after move: {}", now_its_mine);
+
+    // Reference - an immutable pointer that refers other data
+    // When a reference is taken to a value, we say that the value has been `borrowed`
+    // While a value is borrowed immutably, it cannot be mutated or moved.
+    // A borrow is active until the last use of the borrowing variable
+    let mut var = 4;
+    let ref_var: &i32 = &var;
+
+    println!("{}", var); // Unlike mine, var can still be used
+    println!("{}", *ref_var);
+
+    // Mutable reference
+    // While a value is mutably borrowed, it cannot be accessed at all.
+    let mut var2 = 7;
+    let ref_var2: &mut i32 = &mut var2;
+    *ref_var2 += 10;
+
 }
